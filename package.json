@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/juanidiaz/MySQL_bamazon/issues"
   },
-  "homepage": "https://github.com/juanidiaz/MySQL_bamazon#readme"
+  "homepage": "https://github.com/juanidiaz/MySQL_bamazon#readme",
+  "dependencies": {
+    "inquirer": "^6.2.2"
+  }
 }
