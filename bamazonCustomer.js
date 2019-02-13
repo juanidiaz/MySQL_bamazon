@@ -26,13 +26,15 @@ connection.connect(function (err) {
   if (err) throw err; // If there are any errors throw the error
 
   // If everything is ok then start the CLI application
-  start();
+  startCustomer();
 });
 
-function start() {
+function startCustomer() {
   // Query the database for all items on sale
   connection.query("SELECT * FROM products", function (err, results) {
     if (err) throw err;
+
+    // console.table(results)
 
     inquirer
       .prompt([{
@@ -84,22 +86,26 @@ function start() {
               if (error) throw err;
               console.log(dash + "Order placed successfully!\nYour total is CDN$" + (chosenItem.price * parseInt(answer.qty)) + dash);
 
+              productSold(chosenItem, answer.qty);
+
               // Once order was placed give option to keep buying or quit
               var message = "Would you like to keep buying?"
               again(message);
 
             }
           );
+
         } else {
           // If there is not enough stock, allow user to reduce quantity or quit
           var message = "Not enough inventory to clear your order. Do you want to try again with a lower quantity?"
           again(message);
-
         }
+
       });
   });
 };
 
+// Use this function to ask to start again or quit
 function again(msg) {
   inquirer
     .prompt({
@@ -111,7 +117,7 @@ function again(msg) {
       if (answer.again) {
 
         // Start again the buying cycle
-        start();
+        startCustomer();
       } else {
 
         // close connection and quit
@@ -119,3 +125,26 @@ function again(msg) {
       }
     });
 };
+
+function productSold(product, qty) {
+
+  // Log the sale of the product
+  connection.query(
+    "UPDATE products SET ? WHERE ?",
+    [{
+        product_sales: (product.product_sales + (product.price + parseInt(qty)))
+      },
+      {
+        item_id: product.item_id
+      }
+    ],
+    function (error) {
+      if (error) throw err;
+
+    }
+  );
+
+
+
+
+}

@@ -9,6 +9,7 @@ CREATE TABLE products(
   department_name VARCHAR(100) NOT NULL,
   price DECIMAL(10,2) default 0,
   stock_quantity INTEGER(10) default 0,
+  product_sales DECIMAL(10,2) default 0,
   PRIMARY KEY (item_id)
 );
 
@@ -23,5 +24,12 @@ VALUES ("Toastess TSG710 Sandwich Grill", "Appliances", 39.96, 5), ("Oster Belgi
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Levoit Air Purifier", "Home", 19.92, 167), ("ACTCUT Super Soft Indoor Modern Shag", "Home", 39.99, 245), ("Zinus Memory Foam 12 Inch Green Tea Mattress", "Home", 259, 5);
+
+CREATE TABLE departments(
+  department_id INT NOT NULL AUTO_INCREMENT,
+  department_name VARCHAR(100) NOT NULL,
+  over_head_costs INTEGER(10) default 0,
+  PRIMARY KEY (department_id)
+);
 
 SELECT * FROM products;
