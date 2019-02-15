@@ -47,6 +47,7 @@ This project is an Amazon-like storefront with the MySQL skills learned at class
 
 ## BUILDING TOOLS
 - Javascript and node.js
+- SQL databases
 - NPM packages used:
     - dotenv
     - mysql
