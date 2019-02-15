@@ -1,25 +1,36 @@
-// Defining dependencies
+// ==============================================================================
+// Defining dependencies and other variables
+// ==============================================================================
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
+// Include this npm npm package to load environment variables from an .env file
+require("dotenv").config();
+
 var dash = "\n**************************************\n"
+
+// ==============================================================================
+// SQL CONFIGURATION
+// This sets up the basic properties for SQL server connection
+// ==============================================================================
 
 var connection = mysql.createConnection({
   // Address to SQL server
-  host: "localhost",
+  host: process.env.SQL_HOST,
 
   // Port to SQL server
-  port: 3306,
+  port: process.env.SQL_PORT,
 
   // username
-  user: "root",
+  user: process.env.SQL_USER,
 
   // password
-  password: "root",
+  password: process.env.SQL_PASSWORD,
 
   // DB name
   database: "bamazon"
 });
+// ==============================================================================
 
 // Create connection to DB
 connection.connect(function (err) {
@@ -29,6 +40,7 @@ connection.connect(function (err) {
   startCustomer();
 });
 
+// Start the curstomer application
 function startCustomer() {
   // Query the database for all items on sale
   connection.query("SELECT * FROM products", function (err, results) {
@@ -126,6 +138,7 @@ function again(msg) {
     });
 };
 
+// Tally the sales of each object
 function productSold(product, qty) {
 
   // Log the sale of the product
@@ -143,8 +156,4 @@ function productSold(product, qty) {
 
     }
   );
-
-
-
-
 }

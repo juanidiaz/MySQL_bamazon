@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/juanidiaz/MySQL_bamazon#readme",
   "dependencies": {
+    "dotenv": "^6.2.0",
     "inquirer": "^6.2.2"
   }
 }
