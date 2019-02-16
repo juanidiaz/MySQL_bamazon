@@ -3,6 +3,7 @@
 // ==============================================================================
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var Table = require('cli-table');
 
 // Include this npm npm package to load environment variables from an .env file
 require("dotenv").config();
@@ -57,13 +58,13 @@ function startManager() {
     })
     .then(function (answer) {
       switch (answer.action) { // Here the program will serve the user's request
-        
+
         case "View Products for Sale":
           viewProducts();
           break;
 
         case "View Low Inventory":
-          lowStock();
+          lowStock(200);
           break;
 
         case "Add to Inventory":
@@ -110,35 +111,26 @@ function viewProducts() {
 };
 
 // Show products with low inventory
-function lowStock() {
+function lowStock(limit) {
 
   // Query the database for all items on sale
-  connection.query("SELECT * FROM products", function (err, results) {
+  connection.query("SELECT * FROM products WHERE `stock_quantity` < ?", [limit], function (err, results) {
     if (err) throw err;
-
-    // ANy product with stock below this index will be flagged
-    var lowStockIndex = 200;
 
     var productArray = []
 
-    console.log('\n\t** LOW STOCK TABLE **\n');
-    console.log('  * Showing products with stock lower than ' + lowStockIndex + '\n');
-
     results.forEach(p => {
-
-      if (p.stock_quantity <= lowStockIndex) {
-
-        productArray.push({
-          ID: p.item_id,
-          "Low Stock item name": p.product_name,
-          Price: p.price,
-          QTY: p.stock_quantity
-        });
-
-      }
-
+      productArray.push({
+        ID: p.item_id,
+        Name: p.product_name,
+        Price: p.price,
+        QTY: p.stock_quantity
+      });
     });
-    // Display all the product
+
+    // Display low stock products
+    console.log('\n\t** LOW STOCK TABLE **\n');
+    console.log('  * Showing products with stock lower than ' + limit + '\n');
     console.table(productArray);
 
     // Ask user if want to return to main menu or quit
@@ -220,26 +212,26 @@ function addProduct() {
 
     inquirer
       .prompt([{
-        name: "product_name",
-        type: "input",
-        message: "Product name",
-      },
-      {
-        name: "department_name",
-        type: "input",
-        message: "Department name",
-      },
-      {
-        name: "price",
-        type: "input",
-        message: "Sale price",
-      },
-      {
-        name: "stock_quantity",
-        type: "input",
-        message: "Initial stock",
-      },
-    ])
+          name: "product_name",
+          type: "input",
+          message: "Product name",
+        },
+        {
+          name: "department_name",
+          type: "input",
+          message: "Department name",
+        },
+        {
+          name: "price",
+          type: "input",
+          message: "Sale price",
+        },
+        {
+          name: "stock_quantity",
+          type: "input",
+          message: "Initial stock",
+        },
+      ])
       .then(function (answer) {
 
         var query = connection.query(
